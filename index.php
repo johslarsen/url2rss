@@ -50,20 +50,23 @@ function elem_attr($root, $elem_attr, $default_elem, $default_attr) {
   $c = empty($a) ? $e->getPlainText() : $e->getAttribute($a);
   return array($e, $c);
 }
+function defaulted(&$value, $default = "") {
+  return isset($value) ? $value : $default;
+}
 
 ?>
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
   <channel>
-    <title><?=htmlspecialchars(isset($_GET['feedtitle']) ? $_GET['feedtitle'] : $h('title', 0)->getPlainText())?></title>
+    <title><?=htmlspecialchars(defaulted($_GET['feedtitle'], $h('title', 0)->getPlainText()))?></title>
     <link href="<?=htmlspecialchars($_GET['url'])?>" rel="self"/>
     <lastBuildDate><?=date(DateTime::RFC3339, time())?></lastBuildDate>
     <generator uri="https://github.com/johslarsen/url2rss">URL2RSS/0.2</generator>
 
 <?php foreach($h($_GET['entry']) as $e) {
   absolutify_attrs($e, array("href", "src"));
-  list($le, $l) = elem_attr($e, $_GET['link'] ?: "", str_get_dom('<a href=""/>', true), "href");
-  list($te, $t) = elem_attr($e, $_GET['title'] ?: "", $le, "");
+  list($le, $l) = elem_attr($e, defaulted($_GET['link']), str_get_dom('<a href=""/>', true), "href");
+  list($te, $t) = elem_attr($e, defaulted($_GET['title']), $le, "");
   $d = isset($_GET['description']) ? $e($_GET['description'], 0) : $e;
   ?>
     <item>
