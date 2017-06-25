@@ -3,6 +3,7 @@ require_once("ganon/ganon.php");
 
 foreach (array('url', 'entry') as $required) {
   if (!isset($_GET[$required])) {
+    header('Content-Type: text/markdown; charset=UTF-8; variant=GFM');
     header('Location: README.md');
     exit();
   }
