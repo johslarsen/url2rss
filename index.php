@@ -7,7 +7,10 @@ foreach (array('url', 'entry') as $required) {
     exit();
   }
 }
-$h = file_get_dom($_GET['url']);
+$http_opts = array();
+if (isset($_GET['user_agent'])) $http_opts['user_agent'] = $_GET['user_agent'];
+$context = stream_context_create(array('http' => $http_opts));
+$h = file_get_dom($_GET['url'], true, false, $context);
 
 function authority($url_components) {
     $port = isset($url_components['port']) ? ":".$url_components['port'] : "";
@@ -16,6 +19,7 @@ function authority($url_components) {
     return $login.$url_components['host'].$port;
 }
 function absolute($relative_url) {
+    if (empty($relative_url)) return "";
     $r = parse_url($_GET['url']);
     $u = parse_url($relative_url);
 
@@ -31,6 +35,20 @@ function absolute($relative_url) {
     if (isset($u['fragment'])) $url .= "?${u['fragment']}";
     return $url;
 }
+function absolutify_attrs($root, array $attrs) {
+  foreach($root->getChildrenByCallback(function($n) {return true;}, true, true) as $n) {
+    foreach($attrs as $a) {
+      if ($n->hasAttribute($a)) $n->setAttribute($a, absolute(html_entity_decode($n->getAttribute($a))));
+    }
+  }
+}
+function elem_attr($root, $elem_attr, $default_elem, $default_attr) {
+  $e_a = explode("$", $elem_attr);
+  $e = empty($e_a[0]) ? $default_elem : $root($e_a[0], 0);
+  $a = sizeof($e_a) == 1 ? $default_attr : $e_a[1];
+  $c = empty($a) ? $e->getPlainText() : $e->getAttribute($a);
+  return array($e, $c);
+}
 
 ?>
 <?xml version="1.0" encoding="UTF-8"?>
@@ -39,15 +57,17 @@ function absolute($relative_url) {
     <title><?=htmlspecialchars(isset($_GET['feedtitle']) ? $_GET['feedtitle'] : $h('title', 0)->getPlainText())?></title>
     <link href="<?=htmlspecialchars($_GET['url'])?>" rel="self"/>
     <lastBuildDate><?=date(DateTime::RFC3339, time())?></lastBuildDate>
-    <generator uri="https://github.com/johslarsen/url2rss">URL2RSS/0.1</generator>
+    <generator uri="https://github.com/johslarsen/url2rss">URL2RSS/0.2</generator>
 
 <?php foreach($h($_GET['entry']) as $e) {
-  $l = isset($_GET['link']) ? $e($_GET['link'], 0) : str_get_dom('<a href=""/>', true);
+  absolutify_attrs($e, array("href", "src"));
+  list($le, $l) = elem_attr($e, $_GET['link'] ?: "", str_get_dom('<a href=""/>', true), "href");
+  list($te, $t) = elem_attr($e, $_GET['title'] ?: "", $le, "");
   $d = isset($_GET['description']) ? $e($_GET['description'], 0) : $e;
-  $t = isset($_GET['title']) ? $e($_GET['title'], 0) : $l;?>
+  ?>
     <item>
-      <title><?=html_entity_decode($t->getPlainText())?></title>
-      <link><?=htmlspecialchars(absolute(html_entity_decode($l->href)))?></link>
+      <title><?=html_entity_decode($t)?></title>
+      <link><?=htmlspecialchars($l)?></link>
       <description><?="<![CDATA[".html_entity_decode($d->toString())."]]>"?></description>
     </item>
 <?php } ?>
