@@ -46,6 +46,7 @@ function absolutify_attrs($root, array $attrs) {
 function elem_attr($root, $elem_attr, $default_elem, $default_attr) {
   $e_a = explode("$", $elem_attr);
   $e = empty($e_a[0]) ? $default_elem : $root($e_a[0], 0);
+  if (empty($e)) return null;
   $a = sizeof($e_a) == 1 ? $default_attr : $e_a[1];
   $c = empty($a) ? $e->getPlainText() : $e->getAttribute($a);
   return array($e, $c);
@@ -67,6 +68,7 @@ header('Content-Type: text/xml');
 <?php foreach($h($_GET['entry']) as $e) {
   absolutify_attrs($e, array("href", "src"));
   list($le, $l) = elem_attr($e, defaulted($_GET['link']), str_get_dom('<a href=""/>', true), "href");
+  if (empty($le)) continue;
   list($te, $t) = elem_attr($e, defaulted($_GET['title']), $le, "");
   $d = isset($_GET['description']) ? $e($_GET['description'], 0) : $e;
   ?>
@@ -75,7 +77,7 @@ header('Content-Type: text/xml');
       <link><?=htmlspecialchars($l)?></link>
       <description><?="<![CDATA[".html_entity_decode($d->toString())."]]>"?></description>
     </item>
-<?php } ?>
+<?php ; } ?>
 
   </channel>
 </rss>
