@@ -43,6 +43,22 @@ function absolutify_attrs($root, array $attrs) {
     }
   }
 }
+function blacklist($root, array $elem_attrs)
+{
+  foreach($elem_attrs as $elem_attr) {
+    $e_a = explode("$", $elem_attr);
+    $matches = empty($e_a[0])
+      ? $root->getChildrenByCallback(function($n) {return true;}, true, true)
+      : $root->select($e_a[0], false, true, true);
+    foreach ($matches as $n) {
+      if (sizeof($e_a) == 1) {
+        $n->delete();
+      } else {
+        $n->deleteAttribute($e_a[1]);
+      }
+    }
+  }
+}
 function elem_attr($root, $elem_attr, $default_elem, $default_attr) {
   $e_a = explode("$", $elem_attr);
   $e = empty($e_a[0]) ? $default_elem : $root($e_a[0], 0);
@@ -67,6 +83,7 @@ header('Content-Type: text/xml');
 
 <?php foreach($h($_GET['entry']) as $e) {
   absolutify_attrs($e, array("href", "src"));
+  if (isset($_GET['blacklist'])) blacklist($e, split(",", $_GET['blacklist']));
   list($le, $l) = elem_attr($e, defaulted($_GET['link']), str_get_dom('<a href=""/>', true), "href");
   if (empty($le)) continue;
   list($te, $t) = elem_attr($e, defaulted($_GET['title']), $le, "");
@@ -75,7 +92,7 @@ header('Content-Type: text/xml');
     <item>
       <title><?=html_entity_decode($t)?></title>
       <link><?=htmlspecialchars($l)?></link>
-      <description><?="<![CDATA[".html_entity_decode($d->toString())."]]>"?></description>
+      <description><?="<![CDATA[".html_entity_decode(empty($d) ? "" : $d->toString())."]]>"?></description>
     </item>
 <?php ; } ?>
 
