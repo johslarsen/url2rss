@@ -27,4 +27,4 @@ Do a GET request on the served directory with the following GET-parameters:
 | `[feedtitle]`        | Override the title of the feed |
 | `[user_agent]`       | Override the user agent used for the request |
 
-The `$attr` syntax is a literal `$` followed by an empty string or an attribute name used to specify that the either the inner text content or the given attribute value should be used to fill that particular field.
+The `$attr[/regex/replace]` syntax is a literal `$` followed by an empty string or an attribute name used to specify that the either the inner text content or the given attribute value should be used to fill that particular field. If followed by a literal `/` it will also do a sed-like search and replace on the content.

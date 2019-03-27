@@ -63,8 +63,12 @@ function elem_attr($root, $elem_attr, $default_elem, $default_attr) {
   $e_a = explode("$", $elem_attr);
   $e = empty($e_a[0]) ? $default_elem : $root($e_a[0], 0);
   if (empty($e)) return null;
-  $a = sizeof($e_a) == 1 ? $default_attr : $e_a[1];
+  $a_gsub = explode("/", sizeof($e_a) == 1 ? $default_attr : $e_a[1]);
+  $a = $a_gsub[0];
   $c = empty($a) ? $e->getPlainText() : $e->getAttribute($a);
+  if (sizeof($a_gsub) != 1) {
+    $c = preg_replace("/".$a_gsub[1]."/", $a_gsub[2], $c);
+  }
   return array($e, $c);
 }
 function defaulted(&$value, $default = "") {
