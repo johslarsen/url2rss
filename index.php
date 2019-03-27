@@ -88,6 +88,7 @@ header('Content-Type: text/xml');
 <?php foreach($h($_GET['entry']) as $e) {
   absolutify_attrs($e, array("href", "src"));
   if (isset($_GET['blacklist'])) blacklist($e, split(",", $_GET['blacklist']));
+  if (isset($_GET['grep']) && preg_match("/".$_GET['grep']."/", $e->toString()) == 0) continue;
   list($le, $l) = elem_attr($e, defaulted($_GET['link']), str_get_dom('<a href=""/>', true), "href");
   if (empty($le)) continue;
   list($te, $t) = elem_attr($e, defaulted($_GET['title']), $le, "");
