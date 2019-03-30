@@ -22,6 +22,7 @@ Do a GET request on the served directory with the following GET-parameters:
 | `entry`              | A pattern for the article containers. NOTE: all `href`(URLs) and `src`(images) attributes within this will be absolutified. |
 | `link[$attr]`        | A pattern for an element whose href (or $attr) content will be used as the entry's link. |
 | `[title[$attr]]`     | A pattern for an element (default is link) within the entry whose text (or $attr) content will be used for as the entry's title. |
+| `[guid[$attr]]`      | A pattern for an element (default is link) within the entry whose text (or $attr) content will be used as the entry's guid. |
 | `[descritpion]`      | A pattern for an element within the entry whose raw content will be used as the entry's description. Default is the entry container. |
 | `[blacklist[$attr]]` | A comma separated list of elements (or $attr) patterns to delete. |
 | `[feedtitle]`        | Override the title of the feed |

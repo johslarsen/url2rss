@@ -92,11 +92,13 @@ header('Content-Type: text/xml');
   list($le, $l) = elem_attr($e, defaulted($_GET['link']), str_get_dom('<a href=""/>', true), "href");
   if (empty($le)) continue;
   list($te, $t) = elem_attr($e, defaulted($_GET['title']), $le, "");
+  list($ge, $g) = elem_attr($e, defaulted($_GET['guid']), $le, "");
   $d = isset($_GET['description']) ? $e($_GET['description'], 0) : $e;
   ?>
     <item>
       <title><?=html_entity_decode($t)?></title>
       <link><?=htmlspecialchars($l)?></link>
+      <guid><?=htmlspecialchars($g)?></guid>
       <description><?="<![CDATA[".html_entity_decode(empty($d) ? "" : $d->toString())."]]>"?></description>
     </item>
 <?php ; } ?>
