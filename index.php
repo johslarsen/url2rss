@@ -92,7 +92,7 @@ header('Content-Type: text/xml');
   list($le, $l) = elem_attr($e, defaulted($_GET['link']), str_get_dom('<a href=""/>', true), "href");
   if (empty($le)) continue;
   list($te, $t) = elem_attr($e, defaulted($_GET['title']), $le, "");
-  list($ge, $g) = elem_attr($e, defaulted($_GET['guid']), $le, "");
+  list($ge, $g) = elem_attr($e, defaulted($_GET['guid']), $le, "href");
   $d = isset($_GET['description']) ? $e($_GET['description'], 0) : $e;
   ?>
     <item>
