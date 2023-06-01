@@ -30,3 +30,14 @@ Do a GET request on the served directory with the following GET-parameters:
 | `[grep]`             | Only include entries matching this pattern |
 
 The `$attr[/regex/replace]` syntax is a literal `$` followed by an empty string or an attribute name used to specify that the either the inner text content or the given attribute value should be used to fill that particular field. If followed by a literal `/` it will also do a sed-like search and replace on the content.
+
+## Filter
+
+There is also a `filter.php` script that fetches a RSS feed, and only outputs those items that matches a given set of filters.
+
+### Parameters
+
+| Parameter | Description |
+| --------- | ----------- |
+| `url`     | The URL for the given website |
+| `title`   | A case-insensitive pattern for the title of items to include |
