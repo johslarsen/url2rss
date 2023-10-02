@@ -96,7 +96,7 @@ header('Content-Type: text/xml');
   $d = isset($_GET['description']) ? $e($_GET['description'], 0) : $e;
   ?>
     <item>
-      <title><?=html_entity_decode($t)?></title>
+      <title><?=htmlspecialchars($t)?></title>
       <link><?=htmlspecialchars($l)?></link>
       <guid><?=htmlspecialchars($g)?></guid>
       <description><?="<![CDATA[".html_entity_decode(empty($d) ? "" : $d->toString())."]]>"?></description>
