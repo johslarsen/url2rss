@@ -41,3 +41,13 @@ There is also a `filter.php` script that fetches a RSS feed, and only outputs th
 | --------- | ----------- |
 | `url`     | The URL for the given website |
 | `title`   | A case-insensitive pattern for the title of items to include |
+
+## YouTube
+
+There is also a `youtube.php` that converts a youtube page into an RSS-feed (in case they ever turn [videos.xml](https://www.youtube.com/feeds/videos.xml))
+
+### Parameters
+
+| Parameter | Description |
+| --------- | ----------- |
+| `user`    | The username to create a feed for (i.e. `https://www.youtube.com/<user>/videos`) |
