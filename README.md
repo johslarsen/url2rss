@@ -20,6 +20,7 @@ Do a GET request on the served directory with the following GET-parameters:
 | ---------            | ----------- |
 | `url`                | The URL for the given website |
 | `entry`              | A pattern for the article containers. NOTE: all `href`(URLs) and `src`(images) attributes within this will be absolutified. |
+| `[entryRegexp]`      | Alternative `entry` pattern extracting the article content with regexp instead of the DOM. When set, link etc. are sed replacements string from the matched groups here. |
 | `link[$attr]`        | A pattern for an element whose href (or $attr) content will be used as the entry's link. |
 | `[title[$attr]]`     | A pattern for an element (default is link) within the entry whose text (or $attr) content will be used for as the entry's title. |
 | `[guid[$attr]]`      | A pattern for an element (default is link) within the entry whose text (or $attr) content will be used as the entry's guid. |
